@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   traefik:
-    image: traefik:1.7.11
+    image: traefik:1.7.19
     restart: always
     hostname: traefik
     container_name: traefik
@@ -28,7 +28,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   jenkins:
-    image: alapshin/jenkins-master:2.176.2-2
+    image: alapshin/jenkins-master:2.222.1-1
     restart: always
     container_name: jenkins
     hostname: jenkins
@@ -47,6 +47,7 @@ services:
       CASC_JENKINS_CONFIG: /var/jenkins_home/jenkins.yml
       # Upgrade installed plugins if image contains newer version
       PLUGINS_FORCE_UPGRADE: "true"
+      TRY_UPGRADE_IF_NO_MARKER: 'true'
     expose:
       - "8080"
     labels:
@@ -69,6 +70,9 @@ services:
 
       - source: github_password
         target: GITHUB_PASSWORD
+
+      - source: openssl_password
+        target: OPENSSL_PASSWORD
 
       - source: sonarqube_token
         target: SONARQUBE_TOKEN
@@ -120,5 +124,7 @@ secrets:
     file: "${WORKDIR}/secrets/github_username"
   github_password:
     file: "${WORKDIR}/secrets/github_password"
+  openssl_password:
+    file: "${WORKDIR}/secrets/openssl_password"
   sonarqube_token:
     file: "${WORKDIR}/secrets/sonarqube_token"
